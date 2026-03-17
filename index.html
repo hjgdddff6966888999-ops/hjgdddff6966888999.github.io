@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的高级交互简历</title>
+    <style>
+        /* 全局重置与基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease; /* 所有变化添加平滑过渡 */
+        }
+
+        body {
+            font-family: "Inter", "微软雅黑", Arial, sans-serif;
+            line-height: 1.7;
+            color: #2d3748;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); /* 渐变背景 */
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* 简历主容器 */
+        .resume-container {
+            width: 100%;
+            max-width: 850px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin: 20px 0;
+        }
+
+        /* 头部信息 */
+        .header {
+            text-align: center;
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2b6cb0;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .header .contact {
+            color: #718096;
+            font-size: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .header .contact span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 模块标题按钮（核心交互元素） */
+        .section-toggle {
+            width: 100%;
+            background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 6px rgba(66, 153, 225, 0.2);
+        }
+
+        .section-toggle:hover {
+            transform: translateY(-2px); /* 悬停轻微上移 */
+            box-shadow: 0 6px 8px rgba(66, 153, 225, 0.3);
+        }
+
+        .section-toggle .icon {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* 模块内容容器 */
+        .section-content {
+            max-height: 0; /* 初始折叠，高度为0 */
+            overflow: hidden; /* 隐藏溢出内容 */
+            padding: 0 20px;
+            border-radius: 8px;
+            background: #f8fafc;
+            margin-bottom: 20px;
+        }
+
+        /* 展开状态的内容容器 */
+        .section-content.active {
+            max-height: 2000px; /* 足够大的高度容纳内容 */
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* 内容项样式 */
+        .content-item {
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .content-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .content-item h3 {
+            font-size: 19px;
+            color: #2b6cb0;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .content-item .sub-info {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        .content-item p {
+            color: #4a5568;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        /* 技能标签样式 */
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .skills span {
+            background: #e8f4f8;
+            color: #2b6cb0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid #4299e1;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .resume-container {
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 26px;
+            }
+            .section-toggle {
+                padding: 14px 16px;
+                font-size: 16px;
+            }
+            .header .contact {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <!-- 头部：个人基本信息 -->
+        <div class="header">
+            <h1>张三</h1>
+            <div class="contact">
+                <span>📱 13800138000</span>
+                <span>📧 zhangsan@example.com</span>
+                <span>📍 北京市朝阳区</span>
+                <span>🌐 github.com/zhangsan</span>
+            </div>
+        </div>
+
+        <!-- 技能模块（可折叠） -->
+        <button class="section-toggle" onclick="toggleSection('skills-section')">
+            专业技能
+            <span class="icon" id="skills-icon">+</span>
+        </button>
+        <div class="section-content" id="skills-section">
+            <div class="skills">
+                <span>HTML/CSS（精通）</span>
+                <span>JavaScript（熟练）</span>
+                <span>Vue.js（熟练）</span>
+                <span>React（基础）</span>
+                <span>Git/GitHub（熟练）</span>
+                <span>响应式布局（精通）</span>
+                <span>UI/UX（基础）</span>
+            </div>
+        </div>
+
+        <!-- 项目经历模块（可折叠） -->
+        <button class="section-toggle" onclick="toggleSection('project-section')">
+            项目/工作经历
+            <span class="icon" id="project-icon">+</span>
+        </button>
+        <div class="section-content" id="project-section">
+            <div class="content-item">
+                <h3>XX科技有限公司 - 前端开发实习生</h3>
+                <div class="sub-info">2025年1月 - 2025年3月 | 北京市</div>
+                <p>1. 参与公司官网改版，使用HTML/CSS实现响应式布局，兼容95%以上浏览器，页面加载速度提升30%；<br>
+                   2. 基于Vue.js开发表单组件，实现表单验证、数据提交等功能，优化用户交互体验；<br>
+                   3. 配合后端工程师调试RESTful API，完成数据可视化模块的开发与上线。</p>
+            </div>
+            <div class="content-item">
+                <h3>个人项目：高级交互简历网页</h3>
+                <div class="sub-info">2025年3月 | 独立完成</div>
+                <p>1. 使用纯HTML/CSS/JS开发带折叠/展开功能的简历网页，加入平滑动画和渐变样式；<br>
+                   2. 实现移动端自适应布局，兼容手机、平板、PC端；<br>
+                   3. 部署至GitHub Pages，支持在线访问和分享，代码已开源至GitHub仓库。</p>
+            </div>
+        </div>
+
+        <!-- 教育背景模块（可折叠） -->
+        <button class="section-toggle" onclick="toggleSection('education-section')">
+            教育背景
+            <span class="icon" id="education-icon">+</span>
+        </button>
+        <div class="section-content" id="education-section">
+            <div class="content-item">
+                <h3>XX大学 - 计算机科学与技术（本科）</h3>
+                <div class="sub-info">2021年9月 - 2025年6月（在读） | GPA：3.8/4.0</div>
+                <p>主修课程：HTML/CSS、JavaScript、数据结构、计算机网络、软件工程、UI设计；<br>
+                   获奖情况：校级一等奖学金（2次）、前端开发竞赛校赛二等奖；<br>
+                   校园经历：计算机协会前端方向负责人，组织3次前端技术分享会。</p>
+            </div>
+        </div>
+
+        <!-- 自我评价模块（可折叠） -->
+        <button class="section-toggle" onclick="toggleSection('self-section')">
+            自我评价
+            <span class="icon" id="self-icon">+</span>
+        </button>
+        <div class="section-content" id="self-section">
+            <p>1. 具备扎实的前端基础，熟练掌握HTML/CSS/JavaScript，能够独立完成从设计到开发的全流程；<br>
+               2. 注重用户体验和代码规范，有良好的编程习惯和问题排查能力；<br>
+               3. 学习能力强，持续关注前端新技术（如Vue3、Vite），并在个人项目中实践应用；<br>
+               4. 具备团队协作意识，能够高效配合产品、后端完成项目开发，目标是成为一名资深前端工程师。</p>
+        </div>
+    </div>
+
+    <!-- 核心交互JS -->
+    <script>
+        // 折叠/展开函数
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const icon = document.getElementById(`${sectionId.split('-')[0]}-icon`);
+            
+            // 切换内容显示状态
+            section.classList.toggle('active');
+            
+            // 切换按钮图标（+/-）
+            icon.textContent = section.classList.contains('active') ? '-' : '+';
+        }
+    </script>
+</body>
+</html>
