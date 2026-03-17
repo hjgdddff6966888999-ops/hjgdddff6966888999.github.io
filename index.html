@@ -3,37 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的高级交互简历</title>
+    <title>我的高级横向简历</title>
     <style>
+        /* 全局变量 - 主题色（可通过JS修改） */
+        :root {
+            --primary-color: #4299e1;       /* 主色 */
+            --primary-dark: #2b6cb0;        /* 主色加深 */
+            --light-bg: #e8f4f8;            /* 浅色背景 */
+            --border-color: #e2e8f0;        /* 边框色 */
+            --text-color: #2d3748;          /* 文字主色 */
+            --text-light: #718096;          /* 文字浅色 */
+        }
+
         /* 全局重置与基础样式 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: all 0.3s ease; /* 所有变化添加平滑过渡 */
+            transition: all 0.3s ease;
         }
 
         body {
             font-family: "Inter", "微软雅黑", Arial, sans-serif;
             line-height: 1.7;
-            color: #2d3748;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); /* 渐变背景 */
+            color: var(--text-color);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             padding: 20px;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            flex-direction: column;
+            align-items: center;
         }
+
+        /* 换色按钮容器 */
+        .color-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .color-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid white;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .color-btn.active {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+        .color-btn.blue { background: #4299e1; }
+        .color-btn.green { background: #48bb78; }
+        .color-btn.purple { background: #9f7aea; }
+        .color-btn.orange { background: #ed8936; }
 
         /* 简历主容器 */
         .resume-container {
             width: 100%;
-            max-width: 850px;
+            max-width: 1200px;
             background: white;
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             padding: 40px;
-            margin: 20px 0;
+            margin-top: 80px;
         }
 
         /* 头部信息 */
@@ -41,19 +78,19 @@
             text-align: center;
             padding-bottom: 30px;
             margin-bottom: 30px;
-            border-bottom: 2px solid #e2e8f0;
+            border-bottom: 2px solid var(--border-color);
         }
 
         .header h1 {
             font-size: 32px;
             font-weight: 700;
-            color: #2b6cb0;
+            color: var(--primary-color);
             margin-bottom: 12px;
             letter-spacing: 0.5px;
         }
 
         .header .contact {
-            color: #718096;
+            color: var(--text-light);
             font-size: 16px;
             display: flex;
             flex-wrap: wrap;
@@ -67,57 +104,66 @@
             gap: 6px;
         }
 
-        /* 模块标题按钮（核心交互元素） */
-        .section-toggle {
-            width: 100%;
-            background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 16px 20px;
-            font-size: 18px;
-            font-weight: 600;
-            text-align: left;
-            cursor: pointer;
+        /* 横向模块按钮容器 */
+        .section-buttons {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            box-shadow: 0 4px 6px rgba(66, 153, 225, 0.2);
-        }
-
-        .section-toggle:hover {
-            transform: translateY(-2px); /* 悬停轻微上移 */
-            box-shadow: 0 6px 8px rgba(66, 153, 225, 0.3);
-        }
-
-        .section-toggle .icon {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        /* 模块内容容器 */
-        .section-content {
-            max-height: 0; /* 初始折叠，高度为0 */
-            overflow: hidden; /* 隐藏溢出内容 */
-            padding: 0 20px;
-            border-radius: 8px;
-            background: #f8fafc;
+            flex-wrap: wrap;
+            gap: 12px;
             margin-bottom: 20px;
         }
 
-        /* 展开状态的内容容器 */
-        .section-content.active {
-            max-height: 2000px; /* 足够大的高度容纳内容 */
+        /* 模块按钮样式 */
+        .section-toggle {
+            flex: 1;
+            min-width: 120px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 16px 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .section-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+
+        .section-toggle .icon {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* 模块内容容器（半页展开） */
+        .section-content-wrapper {
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            background: var(--light-bg);
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            transition: height 0.4s ease;
+        }
+
+        /* 半页展开状态（高度固定为50vh，即视口一半） */
+        .section-content-wrapper.active {
+            height: 50vh; /* 半页高度 */
             padding: 20px;
-            border: 1px solid #e2e8f0;
+            overflow-y: auto; /* 内容超过半页时可滚动 */
         }
 
         /* 内容项样式 */
         .content-item {
             margin-bottom: 24px;
             padding-bottom: 24px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .content-item:last-child {
@@ -128,20 +174,20 @@
 
         .content-item h3 {
             font-size: 19px;
-            color: #2b6cb0;
+            color: var(--primary-color);
             margin-bottom: 8px;
             font-weight: 600;
         }
 
         .content-item .sub-info {
-            color: #718096;
+            color: var(--text-light);
             font-size: 14px;
             margin-bottom: 12px;
             font-style: italic;
         }
 
         .content-item p {
-            color: #4a5568;
+            color: var(--text-color);
             font-size: 15px;
             line-height: 1.8;
         }
@@ -155,26 +201,29 @@
         }
 
         .skills span {
-            background: #e8f4f8;
-            color: #2b6cb0;
+            background: white;
+            color: var(--primary-color);
             padding: 8px 16px;
             border-radius: 20px;
             font-size: 14px;
             font-weight: 500;
-            border: 1px solid #4299e1;
+            border: 1px solid var(--primary-color);
         }
 
         /* 移动端适配 */
         @media (max-width: 768px) {
             .resume-container {
                 padding: 20px;
+                margin-top: 100px;
             }
             .header h1 {
                 font-size: 26px;
             }
             .section-toggle {
-                padding: 14px 16px;
-                font-size: 16px;
+                min-width: 100%;
+            }
+            .section-content-wrapper.active {
+                height: 70vh; /* 移动端半页高度调整为70vh，显示更多内容 */
             }
             .header .contact {
                 flex-direction: column;
@@ -184,6 +233,14 @@
     </style>
 </head>
 <body>
+    <!-- 全局换色按钮 -->
+    <div class="color-switcher">
+        <div class="color-btn blue active" data-color="blue" onclick="changeColor('blue')"></div>
+        <div class="color-btn green" data-color="green" onclick="changeColor('green')"></div>
+        <div class="color-btn purple" data-color="purple" onclick="changeColor('purple')"></div>
+        <div class="color-btn orange" data-color="orange" onclick="changeColor('orange')"></div>
+    </div>
+
     <div class="resume-container">
         <!-- 头部：个人基本信息 -->
         <div class="header">
@@ -196,12 +253,24 @@
             </div>
         </div>
 
-        <!-- 技能模块（可折叠） -->
-        <button class="section-toggle" onclick="toggleSection('skills-section')">
-            专业技能
-            <span class="icon" id="skills-icon">+</span>
-        </button>
-        <div class="section-content" id="skills-section">
+        <!-- 横向模块按钮组 -->
+        <div class="section-buttons">
+            <button class="section-toggle" onclick="toggleSection('skills-section')">
+                专业技能 <span class="icon">+</span>
+            </button>
+            <button class="section-toggle" onclick="toggleSection('project-section')">
+                项目经历 <span class="icon">+</span>
+            </button>
+            <button class="section-toggle" onclick="toggleSection('education-section')">
+                教育背景 <span class="icon">+</span>
+            </button>
+            <button class="section-toggle" onclick="toggleSection('self-section')">
+                自我评价 <span class="icon">+</span>
+            </button>
+        </div>
+
+        <!-- 技能模块内容（半页展开） -->
+        <div class="section-content-wrapper" id="skills-section">
             <div class="skills">
                 <span>HTML/CSS（精通）</span>
                 <span>JavaScript（熟练）</span>
@@ -213,12 +282,8 @@
             </div>
         </div>
 
-        <!-- 项目经历模块（可折叠） -->
-        <button class="section-toggle" onclick="toggleSection('project-section')">
-            项目/工作经历
-            <span class="icon" id="project-icon">+</span>
-        </button>
-        <div class="section-content" id="project-section">
+        <!-- 项目经历模块内容（半页展开） -->
+        <div class="section-content-wrapper" id="project-section">
             <div class="content-item">
                 <h3>XX科技有限公司 - 前端开发实习生</h3>
                 <div class="sub-info">2025年1月 - 2025年3月 | 北京市</div>
@@ -235,12 +300,8 @@
             </div>
         </div>
 
-        <!-- 教育背景模块（可折叠） -->
-        <button class="section-toggle" onclick="toggleSection('education-section')">
-            教育背景
-            <span class="icon" id="education-icon">+</span>
-        </button>
-        <div class="section-content" id="education-section">
+        <!-- 教育背景模块内容（半页展开） -->
+        <div class="section-content-wrapper" id="education-section">
             <div class="content-item">
                 <h3>XX大学 - 计算机科学与技术（本科）</h3>
                 <div class="sub-info">2021年9月 - 2025年6月（在读） | GPA：3.8/4.0</div>
@@ -250,12 +311,8 @@
             </div>
         </div>
 
-        <!-- 自我评价模块（可折叠） -->
-        <button class="section-toggle" onclick="toggleSection('self-section')">
-            自我评价
-            <span class="icon" id="self-icon">+</span>
-        </button>
-        <div class="section-content" id="self-section">
+        <!-- 自我评价模块内容（半页展开） -->
+        <div class="section-content-wrapper" id="self-section">
             <p>1. 具备扎实的前端基础，熟练掌握HTML/CSS/JavaScript，能够独立完成从设计到开发的全流程；<br>
                2. 注重用户体验和代码规范，有良好的编程习惯和问题排查能力；<br>
                3. 学习能力强，持续关注前端新技术（如Vue3、Vite），并在个人项目中实践应用；<br>
@@ -265,16 +322,70 @@
 
     <!-- 核心交互JS -->
     <script>
-        // 折叠/展开函数
+        // 全局变量：记录当前激活的模块
+        let activeSection = null;
+
+        // 折叠/展开模块（半页高度）
         function toggleSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            const icon = document.getElementById(`${sectionId.split('-')[0]}-icon`);
+            const wrapper = document.getElementById(sectionId);
+            const allWrappers = document.querySelectorAll('.section-content-wrapper');
+            const allIcons = document.querySelectorAll('.section-toggle .icon');
             
-            // 切换内容显示状态
-            section.classList.toggle('active');
+            // 重置所有模块和图标
+            allWrappers.forEach(w => w.classList.remove('active'));
+            allIcons.forEach(icon => icon.textContent = '+');
+
+            // 如果点击的是当前激活的模块，关闭它
+            if (activeSection === sectionId) {
+                activeSection = null;
+                return;
+            }
+
+            // 激活当前模块
+            wrapper.classList.add('active');
+            activeSection = sectionId;
             
-            // 切换按钮图标（+/-）
-            icon.textContent = section.classList.contains('active') ? '-' : '+';
+            // 修改当前模块按钮的图标
+            const currentIcon = document.querySelector(`[onclick="toggleSection('${sectionId}')"] .icon`);
+            if (currentIcon) currentIcon.textContent = '-';
+        }
+
+        // 全局换色功能
+        function changeColor(color) {
+            const root = document.documentElement;
+            const colorBtns = document.querySelectorAll('.color-btn');
+            
+            // 重置所有换色按钮状态
+            colorBtns.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.color-btn.${color}`).classList.add('active');
+
+            // 根据选择的颜色修改全局变量
+            switch(color) {
+                case 'blue':
+                    root.style.setProperty('--primary-color', '#4299e1');
+                    root.style.setProperty('--primary-dark', '#2b6cb0');
+                    root.style.setProperty('--light-bg', '#e8f4f8');
+                    root.style.setProperty('--border-color', '#e2e8f0');
+                    break;
+                case 'green':
+                    root.style.setProperty('--primary-color', '#48bb78');
+                    root.style.setProperty('--primary-dark', '#2f855a');
+                    root.style.setProperty('--light-bg', '#e6fffa');
+                    root.style.setProperty('--border-color', '#bbf7d0');
+                    break;
+                case 'purple':
+                    root.style.setProperty('--primary-color', '#9f7aea');
+                    root.style.setProperty('--primary-dark', '#7472FE');
+                    root.style.setProperty('--light-bg', '#faf5ff');
+                    root.style.setProperty('--border-color', '#e9d8fd');
+                    break;
+                case 'orange':
+                    root.style.setProperty('--primary-color', '#ed8936');
+                    root.style.setProperty('--primary-dark', '#c05621');
+                    root.style.setProperty('--light-bg', '#fef7fb');
+                    root.style.setProperty('--border-color', '#fed7aa');
+                    break;
+            }
         }
     </script>
 </body>
